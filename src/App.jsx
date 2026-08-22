@@ -167,6 +167,8 @@ const FLOWERS = [
     name: "Sunflower",
     image: `${BASE}Sunflower.png`,
     mobileImage: `${BASE}Sunflower_Mobile.png`,
+    saveImage: `${BASE}Sunflower_Save.png`,
+    mobileSaveImage: `${BASE}Sunflower_Mbl_Save.png`,
     target: { openness: 6.85, oceanC: 1.39, extraversion: 7.55, agreeableness: 1.53, neuroticism: 10, dominance: 10, influence: 3.7, steadiness: 1, discC: 1.43 },
   },
   {
@@ -174,6 +176,8 @@ const FLOWERS = [
     name: "Rose",
     image: `${BASE}Rose.png`,
     mobileImage: `${BASE}Rose_Mobile.png`,
+    saveImage: `${BASE}Rose_Save.png`,
+    mobileSaveImage: `${BASE}Rose_Mbl_Save.png`,
     target: { openness: 5.95, oceanC: 2.17, extraversion: 8.36, agreeableness: 6.82, neuroticism: 5.5, dominance: 2.69, influence: 7.3, steadiness: 5.5, discC: 2.71 },
   },
   {
@@ -181,13 +185,17 @@ const FLOWERS = [
     name: "Orchid",
     image: `${BASE}Orchid.png`,
     mobileImage: `${BASE}Orchid_Mobile.png`,
+    saveImage: `${BASE}Orchid_Save.png`,
+    mobileSaveImage: `${BASE}Orchid_Mbl_Save.png`,
     target: { openness: 4.15, oceanC: 8.04, extraversion: 1, agreeableness: 3.12, neuroticism: 5.5, dominance: 1.56, influence: 1, steadiness: 4.21, discC: 8.71 },
   },
   {
     id: "hydrangea",
     name: "Hydrangea",
-    image: `${BASE}Hydangea.png`,
+    image: `${BASE}Hydrangea.png`,
     mobileImage: `${BASE}Hydrangea_Mobile.png`,
+    saveImage: `${BASE}Hydrangea_Save.png`,
+    mobileSaveImage: `${BASE}Hydrangea_Mbl_Save.png`,
     target: { openness: 1.9, oceanC: 8.04, extraversion: 1, agreeableness: 3.12, neuroticism: 5.5, dominance: 2.69, influence: 1, steadiness: 4.86, discC: 8.29 },
   },
   {
@@ -195,6 +203,8 @@ const FLOWERS = [
     name: "Chrysanthemum",
     image: `${BASE}Chrysanthemum.png`,
     mobileImage: `${BASE}Chrysanthemum_Mobile.png`,
+    saveImage: `${BASE}Chrysanthemum_Save.png`,
+    mobileSaveImage: `${BASE}Chrysanthemum_Mbl_Save.png`,
     target: { openness: 3.25, oceanC: 3.35, extraversion: 1.82, agreeableness: 10, neuroticism: 1, dominance: 1.56, influence: 2.8, steadiness: 10, discC: 3.14 },
   },
 ];
@@ -267,6 +277,15 @@ function computeResult(answers) {
 /* ---------------------------------------------------------
    4. DECORATIVE BITS
 --------------------------------------------------------- */
+function downloadImage(url, filename) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 function EntryProgress({ total, current }) {
   return (
     <div className="progress-row" role="status" aria-label={`Entry ${current + 1} of ${total}`}>
@@ -280,18 +299,42 @@ function EntryProgress({ total, current }) {
 /* ---------------------------------------------------------
    5. SCREENS
 --------------------------------------------------------- */
-function CoverScreen({ onBegin }) {
+function CoverScreen({ onBegin, onLearnMore }) {
   return (
     <>
       <div className="image-page desktop-only">
         <img className="full-bleed-img" src={`${BASE}Home%20page.png`} alt="The Flower Within — every flower has a personality, which one is yours?" />
         <button className="hotspot hotspot-begin" onClick={onBegin} aria-label="Let's find out" />
+        <button className="hotspot hotspot-learn" onClick={onLearnMore} aria-label="Learn more" />
       </div>
       <div className="image-page-mobile mobile-only">
         <img className="full-bleed-img" src={`${BASE}Homepage_Mobile.png`} alt="The Flower Within — every flower has a personality, which one is yours?" />
         <button className="hotspot hotspot-begin-m" onClick={onBegin} aria-label="Let's find out" />
+        <button className="hotspot hotspot-learn-m" onClick={onLearnMore} aria-label="Learn more" />
       </div>
     </>
+  );
+}
+
+function LearnMoreModal({ onClose }) {
+  return (
+    <div className="learn-more-backdrop" onClick={onClose}>
+      <div className="learn-more-card" onClick={(e) => e.stopPropagation()}>
+        <button className="learn-more-close" onClick={onClose} aria-label="Close">×</button>
+        <h2 className="learn-more-title">About this little game</h2>
+        <p>
+          The Flower Within is a personality quiz dressed up as a pressed-flower scrapbook.
+          Answer 15 quick, everyday questions and we'll match the way you naturally move
+          through the world to one of five flowers — Sunflower, Rose, Orchid, Hydrangea, or
+          Chrysanthemum — each with its own strengths, quirks, and the people it bonds with best.
+        </p>
+        <p>
+          It takes about three minutes, there are no right answers, and it isn't a scientific
+          assessment — just a small, fond mirror. Once you get your flower, you can save it and
+          come back to retake it any time.
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -306,8 +349,8 @@ function QuestionScreen({ question, index, total, selected, onSelect, onBack }) 
   return (
     <div className="page question-page">
       <div className="question-top-row">
-        <button className="btn-text" onClick={onBack} aria-label="Go back to previous entry">
-          ‹ back
+        <button className="btn-back" onClick={onBack} aria-label="Go back to previous entry">
+          ‹ Back
         </button>
         <span className="entry-label">
           ENTRY {String(index + 1).padStart(2, "0")} / {total}
@@ -340,15 +383,20 @@ function QuestionScreen({ question, index, total, selected, onSelect, onBack }) 
 }
 
 function ResultScreen({ flower, onRestart, onHome }) {
+  const handleSave = () => downloadImage(flower.saveImage, `${flower.name}-The-Flower-Within.png`);
+  const handleSaveMobile = () => downloadImage(flower.mobileSaveImage, `${flower.name}-The-Flower-Within.png`);
+
   return (
     <>
       <div className="image-page desktop-only">
         <img className="full-bleed-img" src={flower.image} alt={`You are a ${flower.name}!`} />
+        <button className="hotspot hotspot-save" onClick={handleSave} aria-label="Save" />
         <button className="hotspot hotspot-home" onClick={onHome} aria-label="Home" />
         <button className="hotspot hotspot-retry" onClick={onRestart} aria-label="Retry" />
       </div>
       <div className="image-page-mobile mobile-only">
         <img className="full-bleed-img" src={flower.mobileImage} alt={`You are a ${flower.name}!`} />
+        <button className="hotspot hotspot-save-m" onClick={handleSaveMobile} aria-label="Save" />
         <button className="hotspot hotspot-home-m" onClick={onHome} aria-label="Home" />
         <button className="hotspot hotspot-retry-m" onClick={onRestart} aria-label="Retry" />
       </div>
@@ -363,6 +411,7 @@ export default function App() {
   const [screen, setScreen] = useState("cover"); // cover | question | result
   const [answers, setAnswers] = useState({});
   const [qIndex, setQIndex] = useState(0);
+  const [showLearnMore, setShowLearnMore] = useState(false);
 
   const result = useMemo(() => (screen === "result" ? computeResult(answers) : null), [screen, answers]);
 
@@ -405,7 +454,7 @@ export default function App() {
     <div className="app-root">
       <style>{CSS}</style>
       <div className="scrapbook-surface">
-        {screen === "cover" && <CoverScreen onBegin={() => setScreen("question")} />}
+        {screen === "cover" && <CoverScreen onBegin={() => setScreen("question")} onLearnMore={() => setShowLearnMore(true)} />}
         {screen === "question" && (
           <QuestionScreen
             key={currentQuestion.id}
@@ -419,7 +468,8 @@ export default function App() {
         )}
         {screen === "result" && result && <ResultScreen flower={result} onRestart={handleRestart} onHome={handleHome} />}
       </div>
-      <footer className="site-footer">© 2026 Vanikalyani R</footer>
+      {showLearnMore && <LearnMoreModal onClose={() => setShowLearnMore(false)} />}
+      <footer className="site-footer">© Vanikalyani R 2026</footer>
     </div>
   );
 }
@@ -499,6 +549,8 @@ const CSS = `
 }
 .hotspot:focus-visible{ outline:3px solid var(--slate); outline-offset:2px; }
 .hotspot-begin{ left:34%; top:61%; width:30%; height:10%; }
+.hotspot-learn{ left:38%; top:78%; width:24%; height:6%; }
+.hotspot-save{ left:91%; top:68%; width:9%; height:9%; }
 .hotspot-home{ left:91%; top:78%; width:9%; height:8.5%; }
 .hotspot-retry{ left:91%; top:87%; width:9%; height:9%; }
 
@@ -520,6 +572,8 @@ const CSS = `
   overflow:hidden;
 }
 .hotspot-begin-m{ left:26%; top:48%; width:48%; height:6.5%; }
+.hotspot-learn-m{ left:36%; top:58%; width:30%; height:5%; }
+.hotspot-save-m{ left:38%; top:84%; width:24%; height:8.5%; }
 .hotspot-home-m{ left:8%; top:96%; width:24%; height:4%; }
 .hotspot-retry-m{ left:68%; top:96%; width:24%; height:4%; }
 
@@ -555,17 +609,74 @@ const CSS = `
   .question-page{ aspect-ratio:auto; min-height:480px; padding:15% 8% 10%; }
 }
 
-.btn-text{
+.btn-back{
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+  background:rgba(47,38,32,0.09);
+  border:none;
+  border-radius:20px;
+  color:var(--ink);
+  font-family:'Baloo 2', sans-serif;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  padding:9px 18px 9px 14px;
+  min-height:40px;
+  transition:background 0.12s ease;
+}
+.btn-back:hover{ background:rgba(47,38,32,0.16); }
+.btn-back:focus-visible{ outline:3px solid var(--slate); outline-offset:2px; }
+
+/* ---- learn more modal ---- */
+.learn-more-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(47,38,32,0.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:20;
+}
+.learn-more-card{
+  position:relative;
+  max-width:480px;
+  width:100%;
+  max-height:80vh;
+  overflow-y:auto;
+  background:var(--paper);
+  padding:40px 32px 32px;
+  box-shadow:0 24px 60px rgba(47,38,32,0.35);
+  clip-path:polygon(0.5% 2%,99% 0%,100% 98%,0.5% 100%);
+}
+.learn-more-close{
+  position:absolute;
+  top:14px;
+  right:16px;
   background:none;
   border:none;
+  font-size:26px;
+  line-height:1;
   color:var(--ink-soft);
-  font-family:'Work Sans', sans-serif;
-  font-size:13px;
   cursor:pointer;
-  padding:10px 6px;
-  min-height:40px;
+  padding:6px;
 }
-.btn-text:focus-visible{ outline:3px solid var(--slate); outline-offset:2px; }
+.learn-more-close:hover{ color:var(--ink); }
+.learn-more-title{
+  font-family:'Baloo 2', sans-serif;
+  font-weight:700;
+  font-size:22px;
+  margin:0 0 16px;
+  color:var(--ink);
+}
+.learn-more-card p{
+  font-size:14.5px;
+  line-height:1.7;
+  color:var(--ink-soft);
+  margin:0 0 14px;
+}
+.learn-more-card p:last-child{ margin-bottom:0; }
 
 .question-top-row{
   display:flex;
