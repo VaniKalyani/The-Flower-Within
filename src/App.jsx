@@ -325,12 +325,12 @@ function LearnMoreModal({ onClose }) {
         <p>
           The Flower Within is a personality quiz dressed up as a pressed-flower scrapbook.
           Answer 15 quick, everyday questions and we'll match the way you naturally move
-          through the world to one of five flowers — Sunflower, Rose, Orchid, Hydrangea, or
-          Chrysanthemum — each with its own strengths, quirks, and the people it bonds with best.
+          through the world to one of five flowers: Sunflower, Rose, Orchid, Hydrangea, or
+          Chrysanthemum: each with its own strengths, quirks, and the people it bonds with best.
         </p>
         <p>
           It takes about three minutes, there are no right answers, and it isn't a scientific
-          assessment — just a small, fond mirror. Once you get your flower, you can save it and
+          assessment; just a small, fond mirror. Once you get your flower, you can save it and
           come back to retake it any time.
         </p>
       </div>
@@ -613,11 +613,11 @@ const CSS = `
   display:inline-flex;
   align-items:center;
   gap:2px;
-  background:rgba(47,38,32,0.09);
   border:none;
   border-radius:20px;
-  color:var(--ink);
-  font-family:'Baloo 2', sans-serif;
+  background:none;
+  color:var(--ink-soft);
+  font-family:'Radley', monospace;
   font-weight:600;
   font-size:14px;
   cursor:pointer;
@@ -625,7 +625,7 @@ const CSS = `
   min-height:40px;
   transition:background 0.12s ease;
 }
-.btn-back:hover{ background:rgba(47,38,32,0.16); }
+.btn-back:hover{ background:rgba(142, 117, 100, 0.16); }
 .btn-back:focus-visible{ outline:3px solid var(--slate); outline-offset:2px; }
 
 /* ---- learn more modal ---- */
