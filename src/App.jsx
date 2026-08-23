@@ -571,8 +571,8 @@ const CSS = `
   box-shadow:0 20px 50px rgba(47,38,32,0.16), 0 2px 8px rgba(47,38,32,0.1);
   overflow:hidden;
 }
-.hotspot-begin-m{ left:26%; top:48%; width:48%; height:6.5%; }
-.hotspot-learn-m{ left:36%; top:58%; width:30%; height:5%; }
+.hotspot-begin-m{ left:25%; top:53.5%; width:49%; height:9%; }
+.hotspot-learn-m{ left:34%; top:64.5%; width:32%; height:4.5%; }
 .hotspot-save-m{ left:38%; top:84%; width:24%; height:8.5%; }
 .hotspot-home-m{ left:8%; top:96%; width:24%; height:4%; }
 .hotspot-retry-m{ left:68%; top:96%; width:24%; height:4%; }
