@@ -305,12 +305,12 @@ function CoverScreen({ onBegin, onLearnMore }) {
       <div className="image-page desktop-only">
         <img className="full-bleed-img" src={`${BASE}Home%20page.png`} alt="The Flower Within — every flower has a personality, which one is yours?" />
         <button className="hotspot hotspot-begin" onClick={onBegin} aria-label="Let's find out" />
-        <button className="hotspot hotspot-learn" onClick={onLearnMore} aria-label="Learn more" />
+        <button className="cover-about cover-about-desktop" onClick={onLearnMore}>About game</button>
       </div>
       <div className="image-page-mobile mobile-only">
         <img className="full-bleed-img" src={`${BASE}Homepage_Mobile.png`} alt="The Flower Within — every flower has a personality, which one is yours?" />
         <button className="hotspot hotspot-begin-m" onClick={onBegin} aria-label="Let's find out" />
-        <button className="hotspot hotspot-learn-m" onClick={onLearnMore} aria-label="Learn more" />
+        <button className="cover-about cover-about-mobile" onClick={onLearnMore}>About game</button>
       </div>
     </>
   );
@@ -478,7 +478,7 @@ export default function App() {
    7. STYLES
 --------------------------------------------------------- */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Special+Elite&family=Work+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Special+Elite&family=Radley:wght@400;500;600&display=swap');
 
 :root{
   --paper:#f3ece0;
@@ -549,10 +549,29 @@ const CSS = `
 }
 .hotspot:focus-visible{ outline:3px solid var(--slate); outline-offset:2px; }
 .hotspot-begin{ left:34%; top:61%; width:30%; height:10%; }
-.hotspot-learn{ left:38%; top:78%; width:24%; height:6%; }
 .hotspot-save{ left:91%; top:68%; width:9%; height:9%; }
 .hotspot-home{ left:91%; top:78%; width:9%; height:8.5%; }
 .hotspot-retry{ left:91%; top:87%; width:9%; height:9%; }
+
+.cover-about{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:none;
+  padding:0;
+  margin:0;
+  cursor:pointer;
+  font-family:'Radley', serif;
+  color:var(--ink-soft);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  transition:color 0.12s ease;
+}
+.cover-about:hover{ color:var(--ink); }
+.cover-about:focus-visible{ outline:3px solid var(--slate); outline-offset:2px; }
+.cover-about-desktop{ left:38%; top:85%; width:24%; height:6%; font-size:17px; }
 
 /* ---- responsive: desktop vs mobile assets ---- */
 .desktop-only{ display:block; }
@@ -572,7 +591,7 @@ const CSS = `
   overflow:hidden;
 }
 .hotspot-begin-m{ left:25%; top:53.5%; width:49%; height:9%; }
-.hotspot-learn-m{ left:34%; top:64.5%; width:32%; height:4.5%; }
+.cover-about-mobile{ left:30%; top:73%; width:40%; height:5%; font-size:16px; }
 .hotspot-save-m{ left:38%; top:84%; width:24%; height:8.5%; }
 .hotspot-home-m{ left:8%; top:96%; width:24%; height:4%; }
 .hotspot-retry-m{ left:68%; top:96%; width:24%; height:4%; }
@@ -713,7 +732,7 @@ const CSS = `
   box-shadow:0 6px 16px rgba(47,38,32,0.14);
 }
 .question-prompt{
-  font-family:'Baloo 2', sans-serif;
+  font-family:'Radley', sans-serif;
   font-weight:700;
   font-size:24px;
   line-height:1.35;
@@ -739,7 +758,7 @@ const CSS = `
   align-items:baseline;
   gap:10px;
   cursor:pointer;
-  font-family:'Work Sans', sans-serif;
+  font-family:'Radley', sans-serif;
   font-size:16px;
   color:#241c2c;
   clip-path:polygon(0% 0%,96% 0%,100% 18%,97% 34%,100% 50%,96% 66%,100% 82%,97% 100%,0% 100%);
